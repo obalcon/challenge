@@ -71,4 +71,4 @@ dummyjson-client
 
 ## Docker
 
-- Dockerfile 
+- Dockerfile ( Não cheguei a testar)
