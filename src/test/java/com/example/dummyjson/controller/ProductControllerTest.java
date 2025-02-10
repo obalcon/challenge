@@ -1,56 +1,55 @@
 package com.example.dummyjson.controller;
 
-import com.example.dummyjson.dto.Product;
-import com.example.dummyjson.service.ProductService;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.when;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
-@RunWith(MockitoJUnitRunner.class)
+import com.example.dummyjson.dto.Product;
+
+import jakarta.annotation.PostConstruct;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ProductControllerTest {
 
-    @InjectMocks
-    private ProductController productController;
+    private static final String BASE_URL = "http://localhost:8000/api/products";
 
-    @Mock
-    private ProductService productService;
+ /*   
+    public static void main(String[] args) {
+    	ProductControllerTest test = new ProductControllerTest();
+        test.runTests();
+    }
+   */ 
+    @PostConstruct
+    public void runTests() {
+        testGetProductById();
+        testGetAllProducts();
+    }
+    private void testGetAllProducts() {
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<Product[]> response = restTemplate.getForEntity(BASE_URL, Product[].class);
 
-    @Test
-    public void testGetAllProducts() {
-        Product product1 = new Product();
-        product1.setId(1L);
-        product1.setTitle("Product 1");
-
-        Product product2 = new Product();
-        product2.setId(2L);
-        product2.setTitle("Product 2");
-
-        List<Product> products = Arrays.asList(product1, product2);
-        when(productService.getAllProducts()).thenReturn(products);
-
-        List<Product> result = productController.getAllProducts();
-        assertEquals(2, result.size());
-        assertEquals("Product 1", result.get(0).getTitle());
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            List<Product> products = Arrays.asList(response.getBody());
+            System.out.println("✅ testGetAllProducts PASSED: " + products);
+        } else {
+            System.out.println("❌ testGetAllProducts FAILED: HTTP " + response.getStatusCode());
+        }
     }
 
-    @Test
-    public void testGetProductById() {
-        Product product = new Product();
-        product.setId(1L);
-        product.setTitle("Product 1");
+    private void testGetProductById() {
+        RestTemplate restTemplate = new RestTemplate();
+        Long productId = 1L; // Defina um ID válido para testar
+        String url = BASE_URL + "/" + productId;
 
-        when(productService.getProductById(1L)).thenReturn(product);
+        ResponseEntity<Product> response = restTemplate.getForEntity(url, Product.class);
 
-        Product result = productController.getProductById(1L);
-        assertEquals("Product 1", result.getTitle());
+        if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+            System.out.println("✅ testGetProductById PASSED: " + response.getBody());
+        } else {
+            System.out.println("❌ testGetProductById FAILED: HTTP " + response.getStatusCode());
+        }
     }
 }

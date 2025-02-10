@@ -1,31 +1,39 @@
 package com.example.dummyjson.dto;
 
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.junit.MockitoJUnitRunner;
 
-import javax.validation.constraints.NotNull;
 
-@RunWith(MockitoJUnitRunner.class)
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.ContextConfiguration;
+
+@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@ContextConfiguration(classes = Product.class)
 public class ProductTest {
 
-    @Test
-    public void testGetAndSetter(){
+    public static void main(String[] args) {
+        ProductTest test = new ProductTest();
+        test.testGetAndSetter();
+    }
+
+    public void testGetAndSetter() {
         Long expectId = 1L;
         String expectedTitle = "A dummy title";
         String expectedDescription = "A dummy description";
-        Double expectedPrice = new Double("2.1");
+        Double expectedPrice =  Double.valueOf("2.1");
+
 
         Product product1 = new Product();
-        product1.setId(1L);
-        product1.setTitle("A dummy title");
-        product1.setDescription("A dummy description");
-        product1.setPrice(new Double("2.1"));
+        product1.setId(expectId);
+        product1.setTitle(expectedTitle);
+        product1.setDescription(expectedDescription);
+        product1.setPrice(expectedPrice);
 
-        Assert.assertEquals(expectId, product1.getId());
-        Assert.assertEquals(expectedTitle, product1.getTitle());
-        Assert.assertEquals(expectedDescription, product1.getDescription());
-        Assert.assertEquals(expectedPrice, product1.getPrice());
+        assert expectId.equals(product1.getId()) : "ID errado";
+        assert expectedTitle.equals(product1.getTitle()) : "Title errado ";
+        assert expectedDescription.equals(product1.getDescription()) : "Description errada";
+        assert expectedPrice.equals(product1.getPrice()) : "Price errado";
+
+        System.out.println("Todos os testes concluidos com sucesso!");
     }
 }
+

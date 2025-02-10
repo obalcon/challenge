@@ -1,2 +1,10 @@
 server:
   port: 8080
+  management:
+  endpoints:
+    web:
+      exposure:
+        include: "health" # Habilita apenas o endpoint /actuator/health
+  endpoint:
+    health:
+      show-details: "always" # Mostra detalhes completos da saúde do microsserviço

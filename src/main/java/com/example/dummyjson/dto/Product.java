@@ -1,6 +1,5 @@
 package com.example.dummyjson.dto;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -8,8 +7,8 @@ import javax.validation.constraints.NotNull;
 public class Product {
 
     @NotNull
-    @Min(0L)
-    @Max(999L)
+    @Min(0)
+    @Max(999)
     private Long id;
 
     @NotNull
@@ -22,7 +21,6 @@ public class Product {
     private Double price;
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
